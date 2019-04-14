@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html id="buttonHtml" style="display: none">
+<head>
+	<title>button</title>
+</head>
+<body>
+	<button>Отправить Email</button>
+</body>
+<script type="text/javascript" src="ClientGlobalContext.js.aspx"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+	var CONTEXT = _getContext();
+	
+	function _getContext() {
+		 var errorMessage = "Context is not available.";
+		 if (typeof GetGlobalContext != "undefined")
+		 { return GetGlobalContext(); }
+		 else
+		 {
+		  if (typeof Xrm != "undefined") {
+		   return Xrm.Page.context;
+		  }
+		  else { throw new Error(errorMessage); }
+		 }
+	}
+</script>
+<script type="text/javascript">
+	function makeRequest(query) {
+	var serverUrl = CONTEXT.getClientUrl();
+
+	var oDataEndpointUrl = serverUrl + "/XRMServices/2011/OrganizationData.svc/";
+	oDataEndpointUrl += query;
+
+	var service = GetRequestObject();
+
+	if (service != null) {
+		service.open("GET", oDataEndpointUrl, false);
+		service.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+		service.setRequestHeader("Accept", "application/json, text/javascript, */*");
+		service.send(null);
+
+		var retrieved = JSON.parse(service.responseText).d;
+
+		var results = [];
+		for (var i = 0; i < retrieved.results.length; i++) {
+			results.push(retrieved.results[i]);
+		}
+
+		return results;
+	}
+	return null;
+}
+
+function GetRequestObject() {
+	if (window.XMLHttpRequest) {
+		return new window.XMLHttpRequest;
+	} else {
+		try {
+			return new ActiveXObject("MSXML2.XMLHTTP.3.0");
+		} catch (ex) {
+			return null;
+		}
+	}
+}
+</script>
+<script type="text/javascript">
+	function onLoad() {
+		var Roles = CONTEXT.userSettings.securityRoles;
+		var allowedRoleNames = ["Системный администратор", "Настройщик системы", "System Customizer", "System Administrator"];
+		for (var i = 0; i < Roles.length; i++) {
+			var RoleId = Roles[i];
+
+			var selectQuery = "/RoleSet?$top=1&$filter=RoleId eq guid'" + RoleId + "'&$select=Name";
+			role = makeRequest(selectQuery);
+			var RoleName = role[0].Name;
+
+			if (allowedRoleNames.indexOf(RoleName)) {
+    			$("#buttonHtml").show();
+    			return ;
+
+			}
+		}
+		
+	}
+	$(document).ready(onLoad);
+</script>
+
+</html>
