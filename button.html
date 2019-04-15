@@ -74,7 +74,7 @@ function GetRequestObject() {
 			role = makeRequest(selectQuery);
 			var RoleName = role[0].Name;
 
-			if (allowedRoleNames.indexOf(RoleName)) {
+			if (allowedRoleNames.indexOf(RoleName) !== -1) {
     			$("#buttonHtml").show();
     			return ;
 
