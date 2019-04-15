@@ -4,7 +4,7 @@
 	<title>button</title>
 </head>
 <body>
-	<button>Отправить Email</button>
+	<button>Send Email</button>
 </body>
 <script type="text/javascript" src="ClientGlobalContext.js.aspx"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -66,7 +66,7 @@ function GetRequestObject() {
 <script type="text/javascript">
 	function onLoad() {
 		var Roles = CONTEXT.userSettings.securityRoles;
-		var allowedRoleNames = ["Системный администратор", "Настройщик системы", "System Customizer", "System Administrator"];
+		var allowedRoleNames = ["Системный администратор", "Настройщик системы", "Системный Настройщик", "System Customizer", "System Administrator"];
 		for (var i = 0; i < Roles.length; i++) {
 			var RoleId = Roles[i];
 
